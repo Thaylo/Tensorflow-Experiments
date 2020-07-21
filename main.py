@@ -18,12 +18,14 @@ def main():
 
 def create_model(features, labels):
     model = tf.keras.Sequential([
-        tf.keras.layers.Dense(len(labels.keys()), activation='linear', input_shape=[len(features.keys())])
+        tf.keras.layers.Dense(2, activation='relu', input_shape=[len(features.keys())]),
+        tf.keras.layers.Dense(4, activation='relu'),
+        tf.keras.layers.Dense(len(labels.keys()), activation='linear')
     ])
-    optimizer = tf.keras.optimizers.RMSprop(learning_rate=0.002)
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.02)
     model.compile(loss='mse',
                   optimizer=optimizer,
-                  metrics=['mae', 'mse'])
+                  metrics=['mse', 'mae'])
     return model
 
 
@@ -41,11 +43,11 @@ def generate_dataset(columns):
     rows_list = []
     for i in range(400):
         new_line = dict()
-        a = random.random()
-        b = random.random()
+        a = random.random()+1
+        b = random.random()+1
         new_line['x'] = a
         new_line['y'] = b
-        new_line['z'] = a + b
+        new_line['z'] = a * b
         rows_list.append(new_line)
     dataset = pd.DataFrame(rows_list, columns=['x', 'y', 'z'])
     print(dataset)
